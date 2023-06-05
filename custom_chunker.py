@@ -11,7 +11,7 @@ Treat _ConsecutiveNPChunkTagger as private: do not use it directly; it is called
 
 """
 from abc import ABC
-
+from features import *
 import nltk
 from nltk.chunk.util import conlltags2tree, tree2conlltags
 
