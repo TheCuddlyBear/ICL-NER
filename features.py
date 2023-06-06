@@ -5,6 +5,12 @@ try:
 except:
     print('VNC2013.csv not found!')
 
+def wordshape(text):
+    import re
+    t1 = re.sub('[A-Z]', 'X',text)
+    t2 = re.sub('[a-z]', 'x', t1)
+    return re.sub('[0-9]', 'd', t2)
+
 def test_features(sentence, i, history):
     """dummy Chunker features designed to test the Chunker class for correctness
         - the POS tag of the word
@@ -87,6 +93,19 @@ def capital2_features(sentence, i, history): # this is not good, uh precision is
         "whole history": tuple(history)
     }
 
+def wordshape_features(sentence, i, history):
+    word, pos = sentence[i]
+    isInNameList = True if word in set(df['Name']) else False
+    shape = wordshape(word)
+    length = len(word)
+    return {
+        "isInNameList": isInNameList,
+        "shape": shape,
+        "length": length,
+        "pos": pos,
+        "whole history": tuple(history)
+    }
+
 def number_features(sentence, i, history): # this is not good, uh precision is very much lower help bye good
     word, pos = sentence[i]
     isInList = True if word in set(df['Name']) else False
@@ -121,4 +140,5 @@ functions = {
     "punc_features": punc_features,
     "capital2_features": capital2_features,
     "number_features": number_features,
+    "wordshape_features": wordshape_features,
 }
