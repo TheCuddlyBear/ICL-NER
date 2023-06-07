@@ -6,6 +6,7 @@ from nltk.corpus import conll2002 as conll
 from custom_chunker import ConsecutiveNPChunker
 
 
+
 def createmodel(dataset, feature_function, output, algorithm):
     training = conll.chunked_sents(dataset)
     model = ConsecutiveNPChunker(functions[feature_function], training, algorithm)
