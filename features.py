@@ -1,4 +1,6 @@
 import pandas as pd
+import re
+from nltk.featstruct import FeatStruct
 
 try:
     df = pd.read_csv('VNC2013.csv')
@@ -6,7 +8,6 @@ except:
     print('VNC2013.csv not found!')
 
 def wordshape(text):
-    import re
     t1 = re.sub('[A-Z]', 'X',text)
     t2 = re.sub('[a-z]', 'x', t1)
     return re.sub('[0-9]', 'd', t2)
@@ -130,7 +131,52 @@ def number_features(sentence, i, history): # this is not good, uh precision is v
         "whole history": tuple(history)
     }
 
+def big_features(sentence, i, history):
+    word, pos = sentence[i]
 
+    features = {
+        'bias': 1.0,
+        'without-caps': word.lower(),
+        'in-list': True if word in set(df['Name']) else False,
+        'word[-3:]': word[-3:],
+        'all-caps': word.isupper(),
+        'title': word.istitle(),
+        'all-digits': word.isdigit(),
+        'contains-dot': '.' in word,
+        'contains-hyphen': '-' in word,
+        'wordshape': wordshape(word),
+        'pos': pos,
+        'history': tuple(history)
+    }
+    if i > 0:
+        w_m, p_m = sentence[i -1]
+        features.update({
+            '-:without-caps': w_m.lower(),
+            '-:title': w_m.istitle(),
+            '-:all-caps': w_m.isupper(),
+            '-:contains-dot': '.' in w_m,
+            '-:contains-hyphen': '-' in w_m,
+            '-:wordshape': wordshape(w_m),
+            '-:pos': p_m,
+        })
+    else:
+        features['begin'] = True
+
+    if i < len(sentence)-1:
+        w_p, p_p = sentence[i + 1]
+        features.update({
+            '+:without-caps': w_p.lower(),
+            '+:title': w_p.istitle(),
+            '+:all-caps': w_p.isupper(),
+            '+:contains-dot': '.' in w_p,
+            '+:contains-hyphen': '-' in w_p,
+            '+:wordshape': wordshape(w_p),
+            '+:pos': p_p,
+        })
+    else:
+        features['end'] = True
+
+    return features
 
 functions = {
     "test_features": test_features,
@@ -141,4 +187,5 @@ functions = {
     "capital2_features": capital2_features,
     "number_features": number_features,
     "wordshape_features": wordshape_features,
+    "big_features": big_features,
 }
