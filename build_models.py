@@ -8,7 +8,7 @@ from custom_chunker import ConsecutiveNPChunker
 
 def create_model(dataset, feature_function, output, algorithm):
     training = conll.chunked_sents(dataset)  # Get training dataset
-    model = ConsecutiveNPChunker(functions[feature_function], training, algorithm)  # Creates the model
+    model = ConsecutiveNPChunker(functions[feature_function], training, algorithm, verbose=3)  # Creates the model
     pickle_model(model, output)  # Pickles the model
 
 
