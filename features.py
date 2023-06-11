@@ -16,9 +16,9 @@ def wordshape(text):
     This function turns all capital letters in to a C, all lowercase letters into a c, and all digits into a d.
     This way we  have a very simple word-shape to compare all words on a basic structure level.
     """
-    t1 = re.sub('[A-Z]', 'C', text)
-    t2 = re.sub('[a-z]', 'c', t1)
-    return re.sub('[0-9]', 'd', t2)
+    t1 = re.sub('[A-Z]', 'C', text) # Replace al capitals in the text with a C
+    t2 = re.sub('[a-z]', 'c', t1) # replace all lowercase letters with c
+    return re.sub('[0-9]', 'd', t2) # replace all digits with d
 
 
 def test_features(sentence, i, history):
@@ -50,9 +50,9 @@ def name_features(sentence, i, history):
 
         """
     word, pos = sentence[i]
-    isInList = True if word in set(df['Name']) else False
-    capital = sum(1 for c in word if c.isupper())
-    length = len(word)
+    isInList = True if word in set(df['Name']) else False # check if word is in name list
+    capital = sum(1 for c in word if c.isupper()) # Counts how many capitals are in the word
+    length = len(word) # The length of the word
     return {
         "isInList": isInList,
         "capital": capital,
@@ -79,10 +79,10 @@ def punc_features(sentence, i, history):
 
         """
     word, pos = sentence[i]
-    isInList = True if word in set(df['Name']) else False
-    containsPunc = '.' or '-' in word
-    capital = sum(1 for c in word if c.isupper())
-    length = len(word)
+    isInList = True if word in set(df['Name']) else False # check if word is in name list
+    containsPunc = '.' or '-' in word # check if . or - is in the word
+    capital = sum(1 for c in word if c.isupper()) # Counts how many capitals are in the word
+    length = len(word) # The length of the word
     return {
         "isInList": isInList,
         "containsPunc": containsPunc,
