@@ -1,0 +1,99 @@
+Algorithm: Naive Bayes
+dummy Chunker features designed to test the Chunker class for correctness
+        - the POS tag of the word
+        - the entire history of IOB tags so far
+            formatted as a tuple because it needs to be hashable
+    ChunkParse score:
+    IOB Accuracy:  90.1%%
+    Precision:      0.0%%
+    Recall:         0.0%%
+    F-Measure:      0.0%%
+
+Algorithm: Naive Bayes
+
+        :param sentence: List of (word, pos) tuples
+        :param i: Index of words in sentence
+        :param history: List of previous IOB tags
+        :return: Feature dictionary
+
+        This function looks at 5 features:
+       - If the word is in the list of most common Dutch names.
+       - If the word contains any capital letters
+       - The word length
+       - The POS-tags
+       - History of previous IOB tags in the sentence
+
+        ChunkParse score:
+    IOB Accuracy:  91.9%%
+    Precision:     35.3%%
+    Recall:        24.5%%
+    F-Measure:     28.9%%
+
+Algorithm: Naive Bayes
+
+        :param sentence: List of (word, pos) tuples
+        :param i: Index of words in sentence
+        :param history: List of previous IOB tags
+        :return: Feature dictionary
+
+        This function looks at 6 features:
+       - If the word is in the list of most common Dutch names.
+       - If the word contains punctuation
+       - If the word contains any capital letters
+       - The word length
+       - The POS-tags
+       - History of previous IOB tags in the sentence
+
+        ChunkParse score:
+    IOB Accuracy:  91.9%%
+    Precision:     35.3%%
+    Recall:        24.5%%
+    F-Measure:     28.9%%
+
+Algorithm: Naive Bayes
+
+       :param sentence: List of (word, pos) tuples
+       :param i: Index of words in sentence
+       :param history: List of previous IOB tags
+       :return: Feature dictionary
+
+       This function looks at 5 features:
+       - If the word is in a list of most common Dutch names
+       - Shape of the word (Ccd)
+       - The word length
+       - The POS-tags
+       - History of previous IOB tags in the sentence
+
+       ChunkParse score:
+    IOB Accuracy:  92.6%%
+    Precision:     33.3%%
+    Recall:        38.1%%
+    F-Measure:     35.5%%
+
+Algorithm: Naive Bayes
+
+    Feature function: Big Features
+    :param sentence: List of (word, pos) tuples
+    :param i: Index of words in sentence
+    :param history: List of previous IOB tags
+    :return: Feature dictionary
+
+    This function uses a window of 2 words, which means it looks to the given word, the word before
+    and the word after. This function looks at 11 features:
+        - The word in lowercase
+        - If the word is in a list of common Dutch names
+        - The suffix of the word
+        - If the word is all caps
+        - If the word starts with a capital letter
+        - If it contains a dot (.)
+        - If it contains a hyphen (-)
+        - Shape of the word (Ccd)
+        - The POS-tags
+        - History of previous IOB tags in the sentence
+
+    ChunkParse score:
+    IOB Accuracy:  94.3%%
+    Precision:     47.8%%
+    Recall:        62.2%%
+    F-Measure:     54.0%%
+

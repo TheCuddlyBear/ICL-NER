@@ -27,7 +27,7 @@ def main(argv):
         sys.exit(2)
     for opt, arg in opts:
         if opt == "-h":
-            print('Model Builder\n\nUsage:\n  build_models.py -d <dataset> -a <algorithm> -f <feature function> -o <output>\n  build_models.py -h\n  build_models.py -v\n\nOptions:\n  -h --help       Show this screen.\n  --version       Show version.\n  -a --algorithm  Choose algorithm used\n  -d --dataset    Choose the dataset used (ned.train, esp.train)\n  -f --feature    Choose the feature function used\n  -o --output     File name of the outputted model')
+            print('Model Builder\n\nUsage:\n  build_models.py -d <dataset> -a <algorithm> -f <feature function> -o <output>\n  build_models.py -h\n  build_models.py -v\n\nOptions:\n  -h              Show this screen.\n  -v              Show version.\n  -a --algorithm  Choose algorithm used\n  -d --dataset    Choose the dataset used (ned.train, esp.train)\n  -f --feature    Choose the feature function used\n  -o --output     File name of the outputted model')
             sys.exit()
         elif opt in ('-d', "--dataset"):
             if arg in ("ned.train", "esp.train"):

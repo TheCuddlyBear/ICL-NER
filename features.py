@@ -7,10 +7,19 @@ try:
 except:
     print('VNC2013.csv not found!')
 
+
 def wordshape(text):
-    t1 = re.sub('[A-Z]', 'X',text)
-    t2 = re.sub('[a-z]', 'x', t1)
+    """
+    :param text: The word from the sentence
+    :return: The word in format (Ccd)
+
+    This function turns all capital letters in to a C, all lowercase letters into a c, and all digits into a d.
+    This way we  have a very simple word-shape to compare all words on a basic structure level.
+    """
+    t1 = re.sub('[A-Z]', 'C', text)
+    t2 = re.sub('[a-z]', 'c', t1)
     return re.sub('[0-9]', 'd', t2)
+
 
 def test_features(sentence, i, history):
     """dummy Chunker features designed to test the Chunker class for correctness
@@ -24,27 +33,22 @@ def test_features(sentence, i, history):
         "whole history": tuple(history)
     }
 
-def capital_features(sentence, i, history):
-    word, pos = sentence[i]
-    capital = sum(1 for c in word if c.isupper())
-    return {
-        "capital": capital,
-        "pos": pos,
-        "whole history": tuple(history)
-    }
-
-def len_features(sentence, i, history):
-    word, pos = sentence[i]
-    capital = sum(1 for c in word if c.isupper())
-    length = len(word)
-    return {
-        "capital": capital,
-        "length": length,
-        "pos": pos,
-        "whole history": tuple(history)
-    }
 
 def name_features(sentence, i, history):
+    """
+        :param sentence: List of (word, pos) tuples
+        :param i: Index of words in sentence
+        :param history: List of previous IOB tags
+        :return: Feature dictionary
+
+        This function looks at 5 features:
+       - If the word is in the list of most common Dutch names.
+       - If the word contains any capital letters
+       - The word length
+       - The POS-tags
+       - History of previous IOB tags in the sentence
+
+        """
     word, pos = sentence[i]
     isInList = True if word in set(df['Name']) else False
     capital = sum(1 for c in word if c.isupper())
@@ -57,7 +61,23 @@ def name_features(sentence, i, history):
         "whole history": tuple(history)
     }
 
-def punc_features(sentence, i, history): # does nothing special :D
+
+def punc_features(sentence, i, history):
+    """
+        :param sentence: List of (word, pos) tuples
+        :param i: Index of words in sentence
+        :param history: List of previous IOB tags
+        :return: Feature dictionary
+
+        This function looks at 6 features:
+       - If the word is in the list of most common Dutch names.
+       - If the word contains punctuation
+       - If the word contains any capital letters
+       - The word length
+       - The POS-tags
+       - History of previous IOB tags in the sentence
+
+        """
     word, pos = sentence[i]
     isInList = True if word in set(df['Name']) else False
     containsPunc = '.' or '-' in word
@@ -67,34 +87,26 @@ def punc_features(sentence, i, history): # does nothing special :D
         "isInList": isInList,
         "containsPunc": containsPunc,
         "capital": capital,
-        "length": length,
-        "pos": pos,
-        "whole history": tuple(history)
-    }
-
-def capital2_features(sentence, i, history): # this is not good, uh precision is very much lower help bye good
-    word, pos = sentence[i]
-    isInList = True if word in set(df['Name']) else False
-    containsPunc = '.' or '-' in word
-    firstLetterCapital = word[0].isupper()
-    consecutiveCapitals = 0
-    for i in range(len(word)):
-        if word[i].isupper():
-            consecutiveCapitals += 1
-        else:
-            break
-    length = len(word)
-    return {
-        "isInList": isInList,
-        "containsPunc": containsPunc,
-        "firstLetterCapital": firstLetterCapital,
-        "consecutiveCapitals": consecutiveCapitals,
         "length": length,
         "pos": pos,
         "whole history": tuple(history)
     }
 
 def wordshape_features(sentence, i, history):
+    """
+       :param sentence: List of (word, pos) tuples
+       :param i: Index of words in sentence
+       :param history: List of previous IOB tags
+       :return: Feature dictionary
+
+       This function looks at 5 features:
+       - If the word is in a list of most common Dutch names
+       - Shape of the word (Ccd)
+       - The word length
+       - The POS-tags
+       - History of previous IOB tags in the sentence
+
+       """
     word, pos = sentence[i]
     isInNameList = True if word in set(df['Name']) else False
     shape = wordshape(word)
@@ -107,35 +119,33 @@ def wordshape_features(sentence, i, history):
         "whole history": tuple(history)
     }
 
-def number_features(sentence, i, history): # this is not good, uh precision is very much lower help bye good
-    word, pos = sentence[i]
-    isInList = True if word in set(df['Name']) else False
-    containsPunc = '.' or '-' in word
-    firstLetterCapital = word[0].isupper()
-    containsNumbers = any(char.isdigit() for char in word)
-    consecutiveCapitals = 0
-    for i in range(len(word)):
-        if word[i].isupper():
-            consecutiveCapitals += 1
-        else:
-            break
-    length = len(word)
-    return {
-        "isInList": isInList,
-        "containsPunc": containsPunc,
-        "firstLetterCapital": firstLetterCapital,
-        "containsNumbers": containsNumbers,
-        "consecutiveCapitals": consecutiveCapitals,
-        "length": length,
-        "pos": pos,
-        "whole history": tuple(history)
-    }
+
 
 def big_features(sentence, i, history):
+    """
+    Feature function: Big Features
+    :param sentence: List of (word, pos) tuples
+    :param i: Index of words in sentence
+    :param history: List of previous IOB tags
+    :return: Feature dictionary
+
+    This function uses a window of 2 words, which means it looks to the given word, the word before
+    and the word after. This function looks at 11 features:
+        - The word in lowercase
+        - If the word is in a list of common Dutch names
+        - The suffix of the word
+        - If the word is all caps
+        - If the word starts with a capital letter
+        - If it contains a dot (.)
+        - If it contains a hyphen (-)
+        - Shape of the word (Ccd)
+        - The POS-tags
+        - History of previous IOB tags in the sentence
+
+    """
     word, pos = sentence[i]
 
     features = {
-        'bias': 1.0,
         'without-caps': word.lower(),
         'in-list': True if word in set(df['Name']) else False,
         'word[-3:]': word[-3:],
@@ -144,12 +154,12 @@ def big_features(sentence, i, history):
         'all-digits': word.isdigit(),
         'contains-dot': '.' in word,
         'contains-hyphen': '-' in word,
-        'wordshape': wordshape(word),
+        #'wordshape': wordshape(word),
         'pos': pos,
         'history': tuple(history)
     }
     if i > 0:
-        w_m, p_m = sentence[i -1]
+        w_m, p_m = sentence[i - 1]
         features.update({
             '-:without-caps': w_m.lower(),
             '-:title': w_m.istitle(),
@@ -162,7 +172,7 @@ def big_features(sentence, i, history):
     else:
         features['begin'] = True
 
-    if i < len(sentence)-1:
+    if i < len(sentence) - 1:
         w_p, p_p = sentence[i + 1]
         features.update({
             '+:without-caps': w_p.lower(),
@@ -178,14 +188,12 @@ def big_features(sentence, i, history):
 
     return features
 
+
+
 functions = {
     "test_features": test_features,
-    "capital_features": capital_features,
-    "len_features": len_features,
     "name_features": name_features,
     "punc_features": punc_features,
-    "capital2_features": capital2_features,
-    "number_features": number_features,
     "wordshape_features": wordshape_features,
     "big_features": big_features,
 }
